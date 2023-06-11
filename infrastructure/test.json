@@ -1,0 +1,39 @@
+{
+  "video_transcript": [
+    {
+      "timestamp": "00:00:00",
+      "text": "Welcome to our video on the basics of Rust programming language!",
+      "gif": "rust programming language"
+    },
+    {
+      "timestamp": "00:00:10",
+      "text": "So, what is Rust? Rust is a systems programming language that focuses on performance, memory safety, and thread safety.",
+      "gif": "rust code compilation"
+    },
+    {
+      "timestamp": "00:00:25",
+      "text": "One of the key features of Rust is its ownership system, which allows for safe memory management without the need for a garbage collector.",
+      "gif": "rust memory safety"
+    },
+    {
+      "timestamp": "00:00:40",
+      "text": "Rust also supports functional programming concepts such as closures, high-order functions, and pattern matching.",
+      "gif": "rust closures"
+    },
+    {
+      "timestamp": "00:00:55",
+      "text": "Another important aspect of Rust is its support for concurrent programming through its ownership and borrowing model.",
+      "gif": "rust threads"
+    },
+    {
+      "timestamp": "00:01:10",
+      "text": "Rust has an active and growing community, which provides a great number of libraries and tools to help developers write efficient and reliable code.",
+      "gif": "rust community"
+    },
+    {
+      "timestamp": "00:01:25",
+      "text": "Overall, Rust is a powerful and flexible language that is gaining popularity in the development community due to its performance, memory safety, and concurrency features.",
+      "gif": "rust logo"
+    }
+  ]
+}
