@@ -16,11 +16,16 @@ export class ApiConstruct extends Construct {
   constructor(scope: Construct, id: string, props: ApiConstructProps) {
     super(scope, id);
 
-    this.api = new apig.RestApi(scope, "Api");
+    this.api = new apig.RestApi(scope, "Api", {
+      defaultCorsPreflightOptions: {
+        allowOrigins: apig.Cors.ALL_ORIGINS,
+        allowMethods: apig.Cors.ALL_METHODS,
+      },
+    });
 
-    // const authorizer = new apig.TokenAuthorizer(this, "TokenAuthorizer", {
-    //   handler: authLambda,
-    // });
+    const authorizer = new apig.TokenAuthorizer(this, "TokenAuthorizer", {
+      handler: props.authLambda,
+    });
 
     const gifResource = this.api.root.addResource("gif");
 
@@ -33,28 +38,36 @@ export class ApiConstruct extends Construct {
     const projectsResource = this.api.root.addResource("projects");
     const resultResource = this.api.root.addResource("result");
 
+    const defaultMethodOptions = {
+      authorizer,
+    };
+
     projectResource
       .addResource("{projectId}")
       .addMethod(
         "PUT",
-        new apig.LambdaIntegration(props.finalizeProjectLambda)
+        new apig.LambdaIntegration(props.finalizeProjectLambda),
+        defaultMethodOptions
       );
 
     projectResource.addMethod(
       "POST",
-      new apig.LambdaIntegration(props.startProjectLambda)
+      new apig.LambdaIntegration(props.startProjectLambda),
+      defaultMethodOptions
     );
 
     projectsResource.addMethod(
       "GET",
-      new apig.LambdaIntegration(props.getProjectsLambda)
-      // {
-      //   authorizer,
-      // }
+      new apig.LambdaIntegration(props.getProjectsLambda),
+      defaultMethodOptions
     );
 
     resultResource
       .addResource("{projectId}")
-      .addMethod("GET", new apig.LambdaIntegration(props.getResultLambda));
+      .addMethod(
+        "GET",
+        new apig.LambdaIntegration(props.getResultLambda),
+        defaultMethodOptions
+      );
   }
 }
