@@ -5,7 +5,9 @@ import { createProject } from "../services/project";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export const Prompt = () => {
-  const [prompt, setPrompt] = useState("");
+  const [topic, setTopic] = useState("");
+
+  const { getAccessTokenSilently } = useAuth0();
 
   // console.log(session.data?.jwtToken);
 
@@ -28,8 +30,8 @@ export const Prompt = () => {
   const createProjectMutation = useMutation({
     mutationFn: () =>
       createProject({
-        jwtToken: "TODO",
-        prompt,
+        getJwtToken: () => getAccessTokenSilently(),
+        topic,
       }),
   });
 
@@ -41,18 +43,18 @@ export const Prompt = () => {
     <HStack spacing={4}>
       <Input
         type="text"
-        value={prompt}
+        value={topic}
         variant={"flushed"}
         borderBottomColor="#c038f8"
         focusBorderColor="#c038f8"
-        onChange={(e) => setPrompt(e.currentTarget.value)}
+        onChange={(e) => setTopic(e.currentTarget.value)}
         placeholder="Enter a prompt to generate a video (E.g. explain linear regression in statistics to me like I'm 5)"
       />
       <Button
         bgColor={"#c038f8"}
         onClick={() => createProjectMutation.mutate()}
         isLoading={createProjectMutation.isLoading}
-        isDisabled={!prompt}
+        isDisabled={!topic}
       >
         Generate
       </Button>

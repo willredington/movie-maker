@@ -1,40 +1,32 @@
 import { Project } from "../models/project";
-import { fetcher } from "../utils/api";
+import { FetcherProps, fetcher } from "../utils/api";
 
 export function createProject({
-  jwtToken,
-  prompt,
-}: {
-  jwtToken: string;
-  prompt: string;
+  getJwtToken,
+  topic,
+}: Pick<FetcherProps, "getJwtToken"> & {
+  topic: string;
 }) {
   return fetcher<Project>({
-    jwtToken,
+    getJwtToken,
     path: "project",
     requestConfig: {
       method: "POST",
       data: {
-        prompt,
+        topic,
       },
     },
   });
 }
 
 export function getProjects({
-  jwtToken,
-  prompt,
-}: {
-  jwtToken: string;
-  prompt: string;
-}) {
+  getJwtToken,
+}: Pick<FetcherProps, "getJwtToken">) {
   return fetcher<Project[]>({
-    jwtToken,
+    getJwtToken,
     path: "projects",
     requestConfig: {
       method: "GET",
-      data: {
-        prompt,
-      },
     },
   });
 }

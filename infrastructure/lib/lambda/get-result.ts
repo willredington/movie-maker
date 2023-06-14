@@ -2,6 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyHandler } from "aws-lambda";
 import { z } from "zod";
 import { RunTimeEnvVariable, getEnvVariable } from "../config";
 import { ProjectResultService } from "../service/result";
+import { DEFAULT_HTTP_HEADERS } from "../utils";
 
 const Event = z.object({
   projectId: z.string(),
@@ -15,6 +16,7 @@ export const handler: APIGatewayProxyHandler = async (
   if (!eventResult.success) {
     return {
       statusCode: 400,
+      headers: DEFAULT_HTTP_HEADERS,
       body: "Invalid request body",
     };
   }
@@ -33,18 +35,21 @@ export const handler: APIGatewayProxyHandler = async (
     if (projectResult.isOk()) {
       return {
         statusCode: 200,
+        headers: DEFAULT_HTTP_HEADERS,
         body: JSON.stringify(projectResult.unwrap()),
       };
     }
 
     return {
       statusCode: 404,
+      headers: DEFAULT_HTTP_HEADERS,
       body: "Result not found",
     };
   } catch (err) {
     console.error(err);
     return {
       statusCode: 500,
+      headers: DEFAULT_HTTP_HEADERS,
       body: "An unknown error occurred",
     };
   }

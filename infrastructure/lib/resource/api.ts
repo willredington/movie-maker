@@ -27,16 +27,10 @@ export class ApiConstruct extends Construct {
       handler: props.authLambda,
     });
 
-    const gifResource = this.api.root.addResource("gif");
-
-    gifResource.addMethod(
-      "GET",
-      new apig.LambdaIntegration(props.searchGifLambda)
-    );
-
     const projectResource = this.api.root.addResource("project");
     const projectsResource = this.api.root.addResource("projects");
     const resultResource = this.api.root.addResource("result");
+    const gifResource = this.api.root.addResource("gif");
 
     const defaultMethodOptions = {
       authorizer,
@@ -69,5 +63,11 @@ export class ApiConstruct extends Construct {
         new apig.LambdaIntegration(props.getResultLambda),
         defaultMethodOptions
       );
+
+    gifResource.addMethod(
+      "GET",
+      new apig.LambdaIntegration(props.searchGifLambda),
+      defaultMethodOptions
+    );
   }
 }

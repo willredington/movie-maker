@@ -8,7 +8,7 @@ const app = new cdk.App();
 
 const { env, branchName, projectName } = getProjectConfig();
 
-new MovieMakerCdkStack(app, `${env}-${projectName}-${branchName}-stack`, {
+new MovieMakerCdkStack(app, `${env}-${projectName}-${branchName}new-stack`, {
   projectConfig: {
     env,
     branchName,

@@ -13,8 +13,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <Auth0Provider
       domain={import.meta.env.VITE_AUTH0_DOMAIN}
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
-      cacheLocation="localstorage"
+      cacheLocation="memory"
+      useRefreshTokens={true}
+      useRefreshTokensFallback={false}
       authorizationParams={{
+        audience: "https://vzqsui1hp6.execute-api.us-east-1.amazonaws.com/prod",
         redirect_uri: window.location.origin,
       }}
     >

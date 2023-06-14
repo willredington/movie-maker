@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from "aws-lambda";
 import { z } from "zod";
 import { getGIFs } from "../service/gif";
+import { DEFAULT_HTTP_HEADERS } from "../utils";
 
 const Event = z.object({
   searchTerm: z.string(),
@@ -14,6 +15,7 @@ export const handler: APIGatewayProxyHandler = async (
   if (!eventResult.success) {
     return {
       statusCode: 400,
+      headers: DEFAULT_HTTP_HEADERS,
       body: "Invalid request body",
     };
   }
@@ -24,12 +26,14 @@ export const handler: APIGatewayProxyHandler = async (
     const gifResult = await getGIFs(event.searchTerm);
     return {
       statusCode: 200,
+      headers: DEFAULT_HTTP_HEADERS,
       body: JSON.stringify(gifResult),
     };
   } catch (err) {
     console.error(err);
     return {
       statusCode: 500,
+      headers: DEFAULT_HTTP_HEADERS,
       body: "An unknown error occurred",
     };
   }

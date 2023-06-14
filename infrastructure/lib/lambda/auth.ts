@@ -22,7 +22,9 @@ export const handler: APIGatewayTokenAuthorizerHandler = async (
   event: APIGatewayTokenAuthorizerEvent
 ): Promise<APIGatewayAuthorizerResult> => {
   try {
-    const token = event.authorizationToken;
+    const portionToRemove = "Bearer ";
+
+    const token = event.authorizationToken.replace(portionToRemove, "");
 
     const client = new JwksClient({
       jwksUri,
@@ -34,6 +36,8 @@ export const handler: APIGatewayTokenAuthorizerHandler = async (
         callback(null, signingKey);
       });
     };
+
+    console.log("raw token", token);
 
     const decodedToken = await new Promise<JwtPayload>((resolve, reject) => {
       jwt.verify(
