@@ -4,7 +4,7 @@ import { RunTimeEnvVariable, getEnvVariable } from "../config";
 import { z } from "zod";
 import { ProjectService } from "../service/project";
 import { ProjectStatus } from "../model";
-import { DEFAULT_HTTP_HEADERS } from "../utils";
+import { DEFAULT_JSON_HTTP_HEADERS, DEFAULT_TEXT_HTTP_HEADERS } from "../utils";
 
 const stepFunctions = new StepFunctions();
 
@@ -23,7 +23,7 @@ export const handler: APIGatewayProxyHandler = async (incomingEvent) => {
   if (!eventResult.success) {
     return {
       statusCode: 400,
-      headers: DEFAULT_HTTP_HEADERS,
+      headers: DEFAULT_TEXT_HTTP_HEADERS,
       body: "Invalid request body",
     };
   }
@@ -45,7 +45,7 @@ export const handler: APIGatewayProxyHandler = async (incomingEvent) => {
     if (project.status !== ProjectStatus.NeedsApproval) {
       return {
         statusCode: 409,
-        headers: DEFAULT_HTTP_HEADERS,
+        headers: DEFAULT_TEXT_HTTP_HEADERS,
         body: "Project not in a valid state",
       };
     }
@@ -63,14 +63,13 @@ export const handler: APIGatewayProxyHandler = async (incomingEvent) => {
 
     return {
       statusCode: 201,
-      headers: DEFAULT_HTTP_HEADERS,
+      headers: DEFAULT_TEXT_HTTP_HEADERS,
       body: "Created",
     };
   } catch (err) {
-    console.error("failed to send event", err);
     return {
       statusCode: 500,
-      headers: DEFAULT_HTTP_HEADERS,
+      headers: DEFAULT_TEXT_HTTP_HEADERS,
       body: "Something went wrong",
     };
   }

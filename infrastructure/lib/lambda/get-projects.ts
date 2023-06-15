@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { RunTimeEnvVariable, getEnvVariable } from "../config";
 import { ProjectService } from "../service/project";
-import { DEFAULT_HTTP_HEADERS } from "../utils";
+import { DEFAULT_JSON_HTTP_HEADERS, DEFAULT_TEXT_HTTP_HEADERS } from "../utils";
 
 export const handler: APIGatewayProxyHandler = async () => {
   const projectService = new ProjectService(
@@ -17,14 +17,14 @@ export const handler: APIGatewayProxyHandler = async () => {
 
     return {
       statusCode: 200,
-      headers: DEFAULT_HTTP_HEADERS,
+      headers: DEFAULT_JSON_HTTP_HEADERS,
       body: JSON.stringify(projectsForUser),
     };
   } catch (err) {
     console.error(err);
     return {
       statusCode: 500,
-      headers: DEFAULT_HTTP_HEADERS,
+      headers: DEFAULT_TEXT_HTTP_HEADERS,
       body: "An unknown error occurred",
     };
   }

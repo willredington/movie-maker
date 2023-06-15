@@ -3,19 +3,30 @@ import { useQuery } from "react-query";
 import { getProjects } from "../../services/project";
 import { Card } from "../Card";
 import { PromptInput } from "./PromptInput";
+import { useMemo } from "react";
+import { ProjectStatus } from "../../models/project";
 
 export const Prompt = () => {
   const { getAccessTokenSilently } = useAuth0();
 
-  // console.log(session.data?.jwtToken);
-
-  const getProjectsQuery = useQuery("getProjects", () =>
-    getProjects({
-      getJwtToken: getAccessTokenSilently,
-    })
+  const {
+    isLoading,
+    isFetched,
+    data: projects = [],
+  } = useQuery(
+    "getProjects",
+    () =>
+      getProjects({
+        getJwtToken: getAccessTokenSilently,
+      }),
+    {
+      refetchInterval: 5000,
+    }
   );
 
-  console.log(getProjectsQuery);
+  const hasActiveProjects = useMemo(() =>
+    projects.some((project) => [ProjectStatus.Failed, ProjectStatus.Completed])
+  );
 
   return (
     <Card>
