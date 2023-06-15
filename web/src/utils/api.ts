@@ -1,8 +1,9 @@
 import axios, { type AxiosRequestConfig } from "axios";
+import { Auth0ContextInterface } from "@auth0/auth0-react";
 
 export type FetcherProps = {
   path: string;
-  getJwtToken: () => Promise<string>;
+  getJwtToken: Auth0ContextInterface["getAccessTokenSilently"];
   requestConfig: Pick<AxiosRequestConfig, "method" | "data">;
 };
 
@@ -14,7 +15,11 @@ export async function fetcher<T>({
   let jwtToken: string | null = null;
 
   try {
-    jwtToken = await getJwtToken();
+    jwtToken = await getJwtToken({
+      authorizationParams: {
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+      },
+    });
   } catch (err) {
     console.error("error getting the access token");
     throw err;

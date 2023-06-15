@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       useRefreshTokens={true}
       useRefreshTokensFallback={false}
       authorizationParams={{
-        audience: "movie-maker-api",
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
         redirect_uri: window.location.origin,
       }}
     >
