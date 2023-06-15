@@ -11,9 +11,14 @@ export async function fetcher<T>({
   getJwtToken,
   requestConfig,
 }: FetcherProps) {
-  const jwtToken = await getJwtToken();
+  let jwtToken: string | null = null;
 
-  console.log(jwtToken);
+  try {
+    jwtToken = await getJwtToken();
+  } catch (err) {
+    console.error("error getting the access token");
+    throw err;
+  }
 
   const result = await axios<T>({
     ...requestConfig,

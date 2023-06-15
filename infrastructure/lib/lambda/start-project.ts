@@ -1,10 +1,10 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { StepFunctions } from "aws-sdk";
-import { RunTimeEnvVariable, getEnvVariable } from "../config";
-import { ProjectService } from "../service/project";
 import { z } from "zod";
+import { RunTimeEnvVariable, getEnvVariable } from "../config";
 import { ProjectStatus } from "../model";
-import { DEFAULT_CORS_HEADERS, DEFAULT_HTTP_HEADERS } from "../utils";
+import { ProjectService } from "../service/project";
+import { DEFAULT_HTTP_HEADERS } from "../utils";
 
 const stepFunctions = new StepFunctions();
 

@@ -12,8 +12,8 @@ export const Project = z.object({
   id: z.string(),
   userId: z.string(),
   topic: z.string(),
-  status: z.nativeEnum(ProjectStatus),
   createdAt: z.string(),
+  status: z.nativeEnum(ProjectStatus),
 });
 
 export type Project = z.infer<typeof Project>;

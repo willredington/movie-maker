@@ -21,6 +21,7 @@ const jwksUri = `https://${auth0Domain}/.well-known/jwks.json`;
 export const handler: APIGatewayTokenAuthorizerHandler = async (
   event: APIGatewayTokenAuthorizerEvent
 ): Promise<APIGatewayAuthorizerResult> => {
+  console.log(event);
   try {
     const portionToRemove = "Bearer ";
 
@@ -49,6 +50,7 @@ export const handler: APIGatewayTokenAuthorizerHandler = async (
         },
         (err, decoded) => {
           if (err) {
+            console.error("jwt error occurred", err);
             reject(err);
           } else {
             resolve(JwtPayload.parse(decoded));

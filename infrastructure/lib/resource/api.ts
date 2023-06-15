@@ -1,4 +1,4 @@
-import { aws_apigateway as apig, aws_lambda } from "aws-cdk-lib";
+import { Duration, aws_apigateway as apig, aws_lambda } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
 type ApiConstructProps = {
@@ -25,16 +25,24 @@ export class ApiConstruct extends Construct {
 
     const authorizer = new apig.TokenAuthorizer(this, "TokenAuthorizer", {
       handler: props.authLambda,
+      resultsCacheTtl: Duration.seconds(0),
     });
 
+    const gifResource = this.api.root.addResource("gif");
+    const resultResource = this.api.root.addResource("result");
     const projectResource = this.api.root.addResource("project");
     const projectsResource = this.api.root.addResource("projects");
-    const resultResource = this.api.root.addResource("result");
-    const gifResource = this.api.root.addResource("gif");
 
-    const defaultMethodOptions = {
+    const defaultMethodOptions: apig.MethodOptions = {
       authorizer,
+      authorizationType: apig.AuthorizationType.CUSTOM,
     };
+
+    projectResource.addMethod(
+      "POST",
+      new apig.LambdaIntegration(props.startProjectLambda),
+      defaultMethodOptions
+    );
 
     projectResource
       .addResource("{projectId}")
@@ -43,12 +51,6 @@ export class ApiConstruct extends Construct {
         new apig.LambdaIntegration(props.finalizeProjectLambda),
         defaultMethodOptions
       );
-
-    projectResource.addMethod(
-      "POST",
-      new apig.LambdaIntegration(props.startProjectLambda),
-      defaultMethodOptions
-    );
 
     projectsResource.addMethod(
       "GET",

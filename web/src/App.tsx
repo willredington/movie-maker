@@ -1,9 +1,8 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Card } from "./components/Card";
-import { Header } from "./components/Header";
-import { Prompt } from "./components/Prompt";
-import { LoginButton } from "./components/LoginButton";
 import { Container, VStack } from "@chakra-ui/react";
+import { Header } from "./components/Header";
+import { LoginButton } from "./components/LoginButton";
+import { Prompt } from "./components/Prompt";
 
 export function App() {
   const { isAuthenticated } = useAuth0();
@@ -18,13 +17,7 @@ export function App() {
       <Container maxW={"container.lg"}>
         <VStack w="full" spacing={"24"} px={6} py={8}>
           <Header />
-          {isAuthenticated ? (
-            <Card>
-              <Prompt />
-            </Card>
-          ) : (
-            <LoginButton />
-          )}
+          {isAuthenticated ? <Prompt /> : <LoginButton />}
         </VStack>
       </Container>
     </VStack>

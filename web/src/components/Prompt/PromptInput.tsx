@@ -1,10 +1,10 @@
 import { Button, HStack, Input } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import { createProject } from "../services/project";
+import { createProject } from "../../services/project";
 import { useAuth0 } from "@auth0/auth0-react";
 
-export const Prompt = () => {
+export const PromptInput = () => {
   const [topic, setTopic] = useState("");
 
   const { getAccessTokenSilently } = useAuth0();
@@ -30,7 +30,12 @@ export const Prompt = () => {
   const createProjectMutation = useMutation({
     mutationFn: () =>
       createProject({
-        getJwtToken: () => getAccessTokenSilently(),
+        getJwtToken: () =>
+          getAccessTokenSilently({
+            authorizationParams: {
+              audience: "movie-maker-api",
+            },
+          }),
         topic,
       }),
   });
