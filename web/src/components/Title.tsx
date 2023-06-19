@@ -1,7 +1,7 @@
 import { Heading } from "@chakra-ui/react";
 
 // TODO: add flickering effect
-export const Header = () => {
+export const Title = () => {
   return (
     <Heading
       color="white"

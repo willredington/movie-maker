@@ -4,6 +4,7 @@ import { RunTimeEnvVariable, getEnvVariable } from "../config";
 import { ProjectResultService } from "../service/result";
 
 const Event = z.object({
+  userId: z.string(),
   projectId: z.string(),
   videoBucketUrl: z.string(),
 });
@@ -18,9 +19,9 @@ export const handler: Handler = async (incomingEvent) => {
   );
 
   await resultService.createProjectResult({
+    userId: event.userId,
     projectId: event.projectId,
     videoBucketUrl: event.videoBucketUrl,
-    userId: "user-1",
   });
 };
 

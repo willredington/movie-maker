@@ -5,6 +5,7 @@ import { z } from "zod";
 import { ProjectService } from "../service/project";
 import { ProjectStatus } from "../model";
 import { DEFAULT_JSON_HTTP_HEADERS, DEFAULT_TEXT_HTTP_HEADERS } from "../utils";
+import { getAuthFromEvent } from "../service/auth";
 
 const stepFunctions = new StepFunctions();
 
@@ -16,9 +17,12 @@ type FinalizeProjectStateMachineInput = {
   projectId: string;
 };
 
-export const handler: APIGatewayProxyHandler = async (incomingEvent) => {
-  console.log(incomingEvent);
-  const eventResult = IncomingEvent.safeParse(incomingEvent.pathParameters);
+export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
+  console.log(proxyEvent);
+
+  const { userId } = getAuthFromEvent(proxyEvent);
+
+  const eventResult = IncomingEvent.safeParse(proxyEvent.pathParameters);
 
   if (!eventResult.success) {
     return {
@@ -35,7 +39,7 @@ export const handler: APIGatewayProxyHandler = async (incomingEvent) => {
   try {
     const project = (
       await projectService.getProject({
-        userId: "user-1",
+        userId,
         id: eventResult.data.projectId,
       })
     )

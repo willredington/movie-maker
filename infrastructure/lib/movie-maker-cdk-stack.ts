@@ -89,7 +89,7 @@ export class MovieMakerCdkStack extends cdk.Stack {
       }
     );
 
-    // NOTE: avoids circular dependency, will fix later
+    // NOTE: avoids circular dependency
     stateMachine.finalizeProjectStateMachine.grantTaskResponse(
       fargateConstruct.taskDefinition.taskRole
     );

@@ -46,6 +46,7 @@ export class StepFunctionConstruct extends Construct {
         lambdaFunction: props.updateProjectLambda,
         payload: sfn.TaskInput.fromObject({
           projectId: sfn.JsonPath.stringAt("$.id"),
+          userId: sfn.JsonPath.stringAt("$.userId"),
           projectStatus: ProjectStatus.Failed,
         }),
       }
@@ -97,6 +98,7 @@ export class StepFunctionConstruct extends Construct {
         lambdaFunction: props.updateProjectLambda,
         payload: sfn.TaskInput.fromObject({
           projectId: sfn.JsonPath.stringAt("$.id"),
+          userId: sfn.JsonPath.stringAt("$.userId"),
           projectStatus: ProjectStatus.NeedsApproval,
         }),
       }
@@ -126,6 +128,7 @@ export class StepFunctionConstruct extends Construct {
         lambdaFunction: props.updateProjectLambda,
         payload: sfn.TaskInput.fromObject({
           projectId: sfn.JsonPath.stringAt("$.id"),
+          userId: sfn.JsonPath.stringAt("$.userId"),
           projectStatus: ProjectStatus.Failed,
         }),
       }
@@ -139,6 +142,7 @@ export class StepFunctionConstruct extends Construct {
         payloadResponseOnly: true,
         resultPath: "$.finalizingProjectResult",
         payload: sfn.TaskInput.fromObject({
+          userId: sfn.JsonPath.stringAt("$.userId"),
           projectId: sfn.JsonPath.stringAt("$.projectId"),
           projectStatus: ProjectStatus.Finalizing,
         }),
@@ -152,6 +156,7 @@ export class StepFunctionConstruct extends Construct {
         lambdaFunction: props.updateProjectLambda,
         payload: sfn.TaskInput.fromObject({
           projectStatus: ProjectStatus.Completed,
+          userId: sfn.JsonPath.stringAt("$.userId"),
           projectId: sfn.JsonPath.stringAt("$.movieMakerResult.projectId"),
         }),
       }
@@ -163,8 +168,14 @@ export class StepFunctionConstruct extends Construct {
       {
         lambdaFunction: props.createResultLambda,
         payloadResponseOnly: true,
-        inputPath: "$.movieMakerResult",
         resultPath: "$.createResult",
+        payload: sfn.TaskInput.fromObject({
+          userId: sfn.JsonPath.stringAt("$.userId"),
+          projectId: sfn.JsonPath.stringAt("$.projectId"),
+          videoBucketUrl: sfn.JsonPath.stringAt(
+            "$.movieMakerResult.videoBucketUrl"
+          ),
+        }),
       }
     );
 

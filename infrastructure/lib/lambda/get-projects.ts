@@ -2,8 +2,11 @@ import { APIGatewayProxyHandler } from "aws-lambda";
 import { RunTimeEnvVariable, getEnvVariable } from "../config";
 import { ProjectService } from "../service/project";
 import { DEFAULT_JSON_HTTP_HEADERS, DEFAULT_TEXT_HTTP_HEADERS } from "../utils";
+import { getAuthFromEvent } from "../service/auth";
 
-export const handler: APIGatewayProxyHandler = async () => {
+export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
+  const { userId } = getAuthFromEvent(proxyEvent);
+
   const projectService = new ProjectService(
     getEnvVariable(RunTimeEnvVariable.PROJECT_TABLE_NAME)
   );
@@ -11,7 +14,7 @@ export const handler: APIGatewayProxyHandler = async () => {
   try {
     const projectsForUser = (
       await projectService.getProjectsForUser({
-        userId: "user-1",
+        userId,
       })
     ).unwrap();
 

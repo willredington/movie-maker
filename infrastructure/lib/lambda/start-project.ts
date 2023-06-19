@@ -5,6 +5,7 @@ import { RunTimeEnvVariable, getEnvVariable } from "../config";
 import { ProjectStatus } from "../model";
 import { ProjectService } from "../service/project";
 import { DEFAULT_JSON_HTTP_HEADERS, DEFAULT_TEXT_HTTP_HEADERS } from "../utils";
+import { getAuthFromEvent } from "../service/auth";
 
 const stepFunctions = new StepFunctions();
 
@@ -12,10 +13,11 @@ const IncomingEvent = z.object({
   topic: z.string().nonempty(),
 });
 
-export const handler: APIGatewayProxyHandler = async (incomingEvent) => {
-  console.log(incomingEvent);
+export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
+  const { userId } = getAuthFromEvent(proxyEvent);
+
   const eventResult = IncomingEvent.safeParse(
-    JSON.parse(incomingEvent.body ?? "")
+    JSON.parse(proxyEvent.body ?? "")
   );
 
   if (!eventResult.success) {
@@ -33,7 +35,7 @@ export const handler: APIGatewayProxyHandler = async (incomingEvent) => {
   try {
     const projectsForUser = (
       await projectService.getProjectsForUser({
-        userId: "user-1",
+        userId,
       })
     )
       .mapErr(() => "failed to get projects for user")
@@ -57,7 +59,7 @@ export const handler: APIGatewayProxyHandler = async (incomingEvent) => {
     const project = (
       await projectService.createProject({
         topic: eventResult.data.topic,
-        userId: "user-1",
+        userId,
       })
     )
       .mapErr(() => "failed to create project")

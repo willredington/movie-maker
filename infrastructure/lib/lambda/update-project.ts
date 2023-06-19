@@ -5,6 +5,7 @@ import { ProjectStatus } from "../model";
 import { ProjectService } from "../service/project";
 
 const Event = z.object({
+  userId: z.string(),
   projectId: z.string(),
   projectStatus: z.nativeEnum(ProjectStatus),
 });
@@ -21,7 +22,7 @@ export const handler: Handler = async (incomingEvent) => {
   await projectService.updateProject({
     key: {
       id: event.projectId,
-      userId: "user-1",
+      userId: event.userId,
     },
     status: event.projectStatus,
   });
