@@ -1,0 +1,12 @@
+.root {
+  display: flex;
+  padding: 1em;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.link {
+  font-size: 1.25em;
+  color: white;
+  text-decoration: none;
+}

@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button } from "@chakra-ui/react";
 import { useCallback } from "react";
+import { Button } from "../Button";
 
 export function Logout() {
   const { logout, isAuthenticated } = useAuth0();
@@ -14,11 +14,7 @@ export function Logout() {
   }, [logout]);
 
   if (isAuthenticated) {
-    return (
-      <Button color={"white"} bg={"brand.700"} onClick={handleLogout}>
-        Logout
-      </Button>
-    );
+    return <Button onClick={handleLogout}>Logout</Button>;
   }
 
   return null;

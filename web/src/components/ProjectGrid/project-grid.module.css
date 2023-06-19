@@ -1,0 +1,16 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4em;
+}
+
+.label {
+  /* TODO */
+}
+
+.grid {
+  grid-template-columns: 2;
+  gap: 2em;
+  width: 100%;
+}

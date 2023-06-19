@@ -1,0 +1,9 @@
+.root {
+  width: 100%;
+  display: flex;
+  gap: 2.5em;
+}
+
+.input {
+  flex: 1;
+}

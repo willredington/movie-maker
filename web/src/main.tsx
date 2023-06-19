@@ -1,11 +1,10 @@
 import { Auth0Provider } from "@auth0/auth0-react";
-import { ChakraProvider } from "@chakra-ui/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
-import theme from "./theme";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
+import "./global.css";
 
 const queryClient = new QueryClient();
 
@@ -23,9 +22,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <RouterProvider router={router} />
-        </ChakraProvider>
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </Auth0Provider>
   </React.StrictMode>
