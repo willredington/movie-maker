@@ -1,0 +1,9 @@
+:root {
+  /* pallette */
+  --accent-color: #561096;
+  --text-color: white;
+
+  /* components */
+  --button-color: rgba(169, 16, 121, 0.75);
+  --button-color-hover: rgba(169, 16, 121, 1);
+}

@@ -1,0 +1,78 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5em;
+}
+
+.description {
+  text-align: center;
+  color: var(--text-color);
+  font-size: 2em;
+  margin: 0;
+  margin-bottom: 1em;
+  padding: 0;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5em;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  color: white;
+  border: 1px solid white;
+  border-radius: 0.25em;
+  padding: 1em;
+
+  /* From https://css.glass */
+  background: rgba(218, 21, 197, 0.18);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7.6px);
+  -webkit-backdrop-filter: blur(7.6px);
+  border: 1px solid rgba(218, 21, 197, 1);
+}
+
+.label {
+  font-size: 1.5em;
+}
+
+.number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  padding: 0.5em;
+  background-color: var(--accent-color);
+}
+
+.cta {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.link {
+  display: inline-block;
+  padding: 0.5em 1em;
+  font-size: 2em;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: var(--button-color);
+  color: var(--text-color);
+  border: none;
+}
+
+.link:hover {
+  background-color: var(--button-color-hover);
+}
