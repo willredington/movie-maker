@@ -6,13 +6,13 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  background-color: var(--primary-color-1);
+  background-color: var(--button-color);
   color: white;
   border: none;
 }
 
 .button:hover {
-  background-color: var(--primary-color-1);
+  background-color: var(--button-color-hover);
 }
 
 .button:focus {
@@ -21,7 +21,7 @@
 }
 
 .button:disabled {
-  background-color: var(--primary-color-1);
+  background-color: var(--button-color);
   cursor: not-allowed;
-  color: gray;
+  color: rgba(255, 255, 255, 0.25);
 }

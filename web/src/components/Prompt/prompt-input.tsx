@@ -1,11 +1,11 @@
-// import { Button, HStack, Input } from "@chakra-ui/react";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { useMutation } from "react-query";
 import { createProject } from "../../services/project";
-import { useAuth0 } from "@auth0/auth0-react";
-import styles from "./prompt-input.module.css";
-import { Input } from "../Input";
 import { Button } from "../Button";
+import { Input } from "../Input";
+import styles from "./prompt-input.module.css";
 
 export const PromptInput = () => {
   const [topic, setTopic] = useState("");
@@ -18,43 +18,35 @@ export const PromptInput = () => {
         getJwtToken: getAccessTokenSilently,
         topic,
       }),
+    onSuccess: () => {
+      toast("Making your movie, please wait...");
+      // navigate("/projects");
+    },
+    onError: (err) => {
+      console.error(err);
+      toast("Something went wrong, try again in a few minutes");
+    },
   });
 
-  // return (
-  //   <HStack spacing={4}>
-  //     <Input
-  //       type="text"
-  //       value={topic}
-  //       variant={"flushed"}
-  //       borderBottomColor="#c038f8"
-  //       focusBorderColor="#c038f8"
-  //       onChange={(e) => setTopic(e.currentTarget.value)}
-  //       placeholder="Enter a prompt to generate a video (E.g. explain linear regression in statistics to me like I'm 5)"
-  //     />
-  //     <Button
-  //       bgColor={"#c038f8"}
-  //       onClick={() => createProjectMutation.mutate()}
-  //       isLoading={createProjectMutation.isLoading}
-  //       isDisabled={!topic}
-  //     >
-  //       Generate
-  //     </Button>
-  //   </HStack>
-  // );
-
   return (
-    <div className={styles.root}>
-      <div className={styles.input}>
-        <Input
-          value={topic}
-          type="text"
-          onChange={(e) => setTopic(e.currentTarget.value)}
-          placeholder="Enter a prompt to generate a video"
-        />
+    <>
+      <div className={styles.root}>
+        <div className={styles.input}>
+          <Input
+            value={topic}
+            type="text"
+            onChange={(e) => setTopic(e.currentTarget.value)}
+            placeholder="Enter a prompt to generate a video"
+          />
+        </div>
+        <Button
+          onClick={() => createProjectMutation.mutate()}
+          disabled={!topic}
+        >
+          Generate
+        </Button>
       </div>
-      <Button onClick={() => createProjectMutation.mutate()} disabled={!topic}>
-        Generate
-      </Button>
-    </div>
+      <Toaster />
+    </>
   );
 };
