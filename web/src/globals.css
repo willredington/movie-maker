@@ -1,0 +1,11 @@
+html,
+body {
+  height: 100%;
+}
+
+/* https://stackoverflow.com/questions/24461067/how-can-i-make-div-100-height-of-browser-without-vertical-scrolling-of-header */
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}

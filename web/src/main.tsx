@@ -4,8 +4,8 @@ import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
-import "./variables.css";
-import "./global.css";
+import { ChakraProvider } from "@chakra-ui/react";
+import "./globals.css";
 
 const queryClient = new QueryClient();
 
@@ -22,9 +22,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         redirect_uri: window.location.origin,
       }}
     >
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+      <ChakraProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </ChakraProvider>
     </Auth0Provider>
   </React.StrictMode>
 );
