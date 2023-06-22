@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Home } from "./pages/Home/home";
-import { Dashboard } from "./pages/Dashboard/Dashboard";
+import { Projects } from "./pages/Projects";
+import { Project } from "./pages/Project/Project";
 
 export const router = createBrowserRouter([
   {
@@ -8,7 +9,11 @@ export const router = createBrowserRouter([
     Component: Home,
   },
   {
-    path: "/dashboard",
-    Component: Dashboard,
+    path: "/projects",
+    Component: Projects,
+  },
+  {
+    path: "/project/:projectId",
+    Component: Project,
   },
 ]);

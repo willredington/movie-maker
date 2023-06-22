@@ -9,7 +9,7 @@ import { getAuthFromEvent } from "../service/auth";
 
 const stepFunctions = new StepFunctions();
 
-const IncomingEvent = z.object({
+const ExpectedParameters = z.object({
   projectId: z.string().nonempty(),
 });
 
@@ -22,9 +22,11 @@ export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
 
   const { userId } = getAuthFromEvent(proxyEvent);
 
-  const eventResult = IncomingEvent.safeParse(proxyEvent.pathParameters);
+  const parametersResult = ExpectedParameters.safeParse(
+    proxyEvent.pathParameters
+  );
 
-  if (!eventResult.success) {
+  if (!parametersResult.success) {
     return {
       statusCode: 400,
       headers: DEFAULT_TEXT_HTTP_HEADERS,
@@ -40,7 +42,7 @@ export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
     const project = (
       await projectService.getProject({
         userId,
-        id: eventResult.data.projectId,
+        id: parametersResult.data.projectId,
       })
     )
       .mapErr(() => "Could not find project")
@@ -57,7 +59,7 @@ export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
     await stepFunctions
       .startExecution({
         input: JSON.stringify({
-          projectId: eventResult.data.projectId,
+          projectId: parametersResult.data.projectId,
         } satisfies FinalizeProjectStateMachineInput),
         stateMachineArn: getEnvVariable(
           RunTimeEnvVariable.FINALIZE_PROJECT_STATE_MACHINE_ARN

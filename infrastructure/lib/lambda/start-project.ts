@@ -10,6 +10,7 @@ import { getAuthFromEvent } from "../service/auth";
 const stepFunctions = new StepFunctions();
 
 const IncomingEvent = z.object({
+  title: z.string().nonempty(),
   topic: z.string().nonempty(),
 });
 
@@ -59,6 +60,7 @@ export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
     const project = (
       await projectService.createProject({
         topic: eventResult.data.topic,
+        title: eventResult.data.title,
         userId,
       })
     )

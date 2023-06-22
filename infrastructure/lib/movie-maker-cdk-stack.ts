@@ -114,12 +114,19 @@ export class MovieMakerCdkStack extends cdk.Stack {
       projectTable: tables.projectTable,
     });
 
+    const getProjectLambda = await lambdas.buildGetProjectLambda(this, {
+      projectConfig,
+      projectTable: tables.projectTable,
+      sectionTable: tables.projectSectionTable,
+    });
+
     new ApiConstruct(this, "ApiConstruct", {
       authLambda,
       startProjectLambda,
       finalizeProjectLambda,
       searchGifLambda,
       getProjectsLambda,
+      getProjectLambda,
       getResultLambda,
     });
   }

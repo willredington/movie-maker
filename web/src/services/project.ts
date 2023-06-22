@@ -1,11 +1,14 @@
 import { Project } from "../models/project";
+import { ProjectSection } from "../models/section";
 import { FetcherProps, fetcher } from "../utils/api";
 
 export function createProject({
   getJwtToken,
   topic,
+  title,
 }: Pick<FetcherProps, "getJwtToken"> & {
   topic: string;
+  title: string;
 }) {
   return fetcher<Project>({
     getJwtToken,
@@ -14,7 +17,26 @@ export function createProject({
       method: "POST",
       data: {
         topic,
+        title,
       },
+    },
+  });
+}
+
+export function getProject({
+  projectId,
+  getJwtToken,
+}: Pick<FetcherProps, "getJwtToken"> & {
+  projectId: string;
+}) {
+  return fetcher<{
+    project: Project;
+    sections: ProjectSection[];
+  }>({
+    getJwtToken,
+    path: `project/${projectId}`,
+    requestConfig: {
+      method: "GET",
     },
   });
 }

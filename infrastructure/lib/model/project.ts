@@ -10,6 +10,7 @@ export enum ProjectStatus {
 
 export const Project = z.object({
   id: z.string(),
+  title: z.string(),
   userId: z.string(),
   topic: z.string(),
   createdAt: z.string(),

@@ -6,6 +6,7 @@ type ApiConstructProps = {
   startProjectLambda: aws_lambda.IFunction;
   finalizeProjectLambda: aws_lambda.IFunction;
   searchGifLambda: aws_lambda.IFunction;
+  getProjectLambda: aws_lambda.IFunction;
   getProjectsLambda: aws_lambda.IFunction;
   getResultLambda: aws_lambda.IFunction;
 };
@@ -44,13 +45,19 @@ export class ApiConstruct extends Construct {
       defaultMethodOptions
     );
 
-    projectResource
-      .addResource("{projectId}")
-      .addMethod(
-        "PUT",
-        new apig.LambdaIntegration(props.finalizeProjectLambda),
-        defaultMethodOptions
-      );
+    const projectWithIdResource = projectResource.addResource("{projectId}");
+
+    projectWithIdResource.addMethod(
+      "GET",
+      new apig.LambdaIntegration(props.getProjectLambda),
+      defaultMethodOptions
+    );
+
+    projectWithIdResource.addMethod(
+      "PUT",
+      new apig.LambdaIntegration(props.finalizeProjectLambda),
+      defaultMethodOptions
+    );
 
     projectsResource.addMethod(
       "GET",

@@ -304,6 +304,35 @@ export async function buildStartProjectLambda(
   return lambda;
 }
 
+export async function buildGetProjectLambda(
+  scope: Construct,
+  {
+    projectConfig,
+    projectTable,
+    sectionTable,
+  }: {
+    projectConfig: ProjectConfig;
+    projectTable: dynamo.ITable;
+    sectionTable: dynamo.ITable;
+  }
+) {
+  const lambda = await buildNodeJsLambda(scope, {
+    projectConfig,
+    functionName: "get-project",
+    overrideProps: {
+      environment: {
+        [RunTimeEnvVariable.PROJECT_TABLE_NAME]: projectTable.tableName,
+        [RunTimeEnvVariable.SECTION_TABLE_NAME]: sectionTable.tableName,
+      },
+    },
+  });
+
+  projectTable.grantReadWriteData(lambda);
+  sectionTable.grantReadWriteData(lambda);
+
+  return lambda;
+}
+
 export async function buildFinalizeProjectEventLambda(
   scope: Construct,
   {

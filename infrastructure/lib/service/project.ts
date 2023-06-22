@@ -9,11 +9,20 @@ export class ProjectService {
     this.client = new DbClient<Project>(Project, projectTableName);
   }
 
-  createProject({ userId, topic }: { userId: string; topic: string }) {
+  createProject({
+    userId,
+    topic,
+    title,
+  }: {
+    userId: string;
+    topic: string;
+    title: string;
+  }) {
     return this.client.putItem({
       id: v4(),
       userId,
       topic,
+      title,
       status: ProjectStatus.InProgress,
       createdAt: new Date().toISOString(),
     });

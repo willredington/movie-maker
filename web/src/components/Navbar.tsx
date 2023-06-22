@@ -1,4 +1,4 @@
-import { Button, HStack, Heading, Link } from "@chakra-ui/react";
+import { Button, HStack, Heading, Link, useColorMode } from "@chakra-ui/react";
 import { Link as RLink } from "react-router-dom";
 
 type NavItem = {
@@ -8,20 +8,14 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   {
-    label: "Home",
-    link: "/",
-  },
-  {
-    label: "Dashboard",
-    link: "/dashboard",
-  },
-  {
     label: "Projects",
     link: "/projects",
   },
 ];
 
 export function Navbar() {
+  const { toggleColorMode } = useColorMode();
+
   return (
     <HStack
       borderBottom={"1px"}
@@ -33,7 +27,9 @@ export function Navbar() {
       justify={"space-between"}
     >
       <HStack spacing={"10"}>
-        <Heading size={"md"}>Auto Movie Maker</Heading>
+        <Heading size={"md"} as={RLink} to={"/"}>
+          Auto Movie Maker
+        </Heading>
         <HStack spacing={4}>
           {NAV_ITEMS.map((navItem) => (
             <Link key={navItem.label} as={RLink} to={navItem.link}>
@@ -43,6 +39,7 @@ export function Navbar() {
         </HStack>
       </HStack>
       <HStack spacing={4}>
+        <Button onClick={toggleColorMode}>Theme</Button>
         <Button>Sign In</Button>
       </HStack>
     </HStack>
