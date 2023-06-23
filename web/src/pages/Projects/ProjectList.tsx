@@ -19,7 +19,11 @@ export function ProjectList() {
 
   const { onOpen, isOpen, onClose } = useDisclosure();
 
-  const { refetch, data: projects = [] } = useQuery(
+  const {
+    isFetched,
+    refetch,
+    data: projects = [],
+  } = useQuery(
     "getProjects",
     () =>
       getProjects({
@@ -58,7 +62,7 @@ export function ProjectList() {
           />
         </HStack>
         <SimpleGrid w="full" columns={3} spacing={4}>
-          {projects.length === 0 && (
+          {projects.length === 0 && isFetched && (
             <Text fontSize={"lg"}>
               Projects will appear here, nothing yet...
             </Text>

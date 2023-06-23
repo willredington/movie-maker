@@ -44,6 +44,8 @@ export function ProjectListItem({ project }: Record<"project", Project>) {
     navigate(`/project/${project.id}`);
   }, [navigate, project.id]);
 
+  const hasDownloadLink = projectResult?.presignedUrl != null;
+
   return (
     <Card size={"sm"}>
       <CardHeader pos={"relative"}>
@@ -51,7 +53,7 @@ export function ProjectListItem({ project }: Record<"project", Project>) {
           <Heading size={"md"}>{project.title}</Heading>
           <StatusTag status={project.status} />
         </VStack>
-        {projectResult?.presignedUrl != null && (
+        {hasDownloadLink && (
           <IconButton
             pos={"absolute"}
             top={2}
