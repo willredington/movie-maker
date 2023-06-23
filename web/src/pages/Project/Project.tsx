@@ -54,7 +54,7 @@ function _Project() {
   }, [projectId, getAccessTokenSilently, submitProjectMutation]);
 
   const { data: projectData } = useQuery(
-    "getProject",
+    ["getProject", projectId],
     () =>
       projectId != null
         ? getProject({

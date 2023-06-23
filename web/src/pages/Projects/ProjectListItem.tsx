@@ -29,7 +29,7 @@ export function ProjectListItem({ project }: Record<"project", Project>) {
   const needsApproval = project.status === ProjectStatus.NeedsApproval;
 
   const { data: projectResult } = useQuery(
-    "getResult",
+    ["getResult", project.id],
     () =>
       getResult({
         getJwtToken: getAccessTokenSilently,

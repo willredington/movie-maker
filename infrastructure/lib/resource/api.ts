@@ -9,6 +9,7 @@ type ApiConstructProps = {
   getProjectLambda: aws_lambda.IFunction;
   getProjectsLambda: aws_lambda.IFunction;
   getResultLambda: aws_lambda.IFunction;
+  editSectionLambda: aws_lambda.IFunction;
 };
 
 export class ApiConstruct extends Construct {
@@ -33,6 +34,7 @@ export class ApiConstruct extends Construct {
     const resultResource = this.api.root.addResource("result");
     const projectResource = this.api.root.addResource("project");
     const projectsResource = this.api.root.addResource("projects");
+    const sectionResource = this.api.root.addResource("section");
 
     const defaultMethodOptions: apig.MethodOptions = {
       authorizer,
@@ -72,6 +74,12 @@ export class ApiConstruct extends Construct {
         new apig.LambdaIntegration(props.getResultLambda),
         defaultMethodOptions
       );
+
+    sectionResource.addMethod(
+      "PUT",
+      new apig.LambdaIntegration(props.editSectionLambda),
+      defaultMethodOptions
+    );
 
     gifResource.addMethod(
       "GET",

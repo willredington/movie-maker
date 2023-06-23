@@ -38,7 +38,9 @@ export class SectionService {
     updateProps,
   }: {
     key: ProjectSectionKey;
-    updateProps: Partial<Pick<ProjectSection, "gifFilePath" | "audioFilePath">>;
+    updateProps: Partial<
+      Pick<ProjectSection, "gifFilePath" | "audioFilePath" | "text">
+    >;
   }) {
     return this.client.updateItem(key, updateProps);
   }

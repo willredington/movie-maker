@@ -122,6 +122,11 @@ export class MovieMakerCdkStack extends cdk.Stack {
       sectionTable: tables.projectSectionTable,
     });
 
+    const editSectionLambda = await lambdas.buildEditSectionLambda(this, {
+      projectConfig,
+      sectionTable: tables.projectSectionTable,
+    });
+
     new ApiConstruct(this, "ApiConstruct", {
       authLambda,
       startProjectLambda,
@@ -130,6 +135,7 @@ export class MovieMakerCdkStack extends cdk.Stack {
       getProjectsLambda,
       getProjectLambda,
       getResultLambda,
+      editSectionLambda,
     });
   }
 }

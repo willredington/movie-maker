@@ -420,3 +420,28 @@ export async function buildGetResultLambda(
 
   return lambda;
 }
+
+export async function buildEditSectionLambda(
+  scope: Construct,
+  {
+    projectConfig,
+    sectionTable,
+  }: {
+    projectConfig: ProjectConfig;
+    sectionTable: dynamo.ITable;
+  }
+) {
+  const lambda = await buildNodeJsLambda(scope, {
+    projectConfig,
+    functionName: "edit-section",
+    overrideProps: {
+      environment: {
+        [RunTimeEnvVariable.SECTION_TABLE_NAME]: sectionTable.tableName,
+      },
+    },
+  });
+
+  sectionTable.grantReadWriteData(lambda);
+
+  return lambda;
+}

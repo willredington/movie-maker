@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   HStack,
   Heading,
@@ -32,16 +32,26 @@ export function ProjectList() {
 
   return (
     <>
-      <VStack align={"flex-start"} spacing={4} p={2} w="full">
-        <HStack spacing={4}>
-          <Heading textAlign={"left"} size={"lg"}>
-            My Projects
-          </Heading>
-          <IconButton
-            onClick={onOpen}
-            icon={<AddIcon />}
-            aria-label="add project"
-          />
+      <VStack
+        shadow={"xl"}
+        align={"flex-start"}
+        spacing={4}
+        py={6}
+        px={4}
+        w="full"
+      >
+        <HStack justify={"space-between"} w={"full"}>
+          <HStack spacing={4}>
+            <Heading textAlign={"left"} size={"lg"}>
+              My Projects
+            </Heading>
+            <IconButton
+              onClick={onOpen}
+              icon={<AddIcon />}
+              aria-label="add project"
+            />
+          </HStack>
+          <IconButton icon={<RepeatIcon />} aria-label="refresh-btn" />
         </HStack>
         <SimpleGrid w="full" columns={3} spacing={4}>
           {projects.length === 0 && (
