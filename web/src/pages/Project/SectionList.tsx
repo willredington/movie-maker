@@ -17,7 +17,7 @@ export function SectionList({ sections }: { sections: ProjectSection[] }) {
   return (
     <SimpleGrid columns={4} spacing={2} mb={4}>
       {orderedSections.map((section) => (
-        <Card>
+        <Card key={section.id}>
           <CardHeader pos={"relative"}>
             <Text fontWeight={"semibold"} fontSize={"lg"}>
               Section #{section.order + 1}

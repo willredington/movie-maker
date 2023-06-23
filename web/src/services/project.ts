@@ -23,6 +23,21 @@ export function createProject({
   });
 }
 
+export function submitProject({
+  getJwtToken,
+  projectId,
+}: Pick<FetcherProps, "getJwtToken"> & {
+  projectId: string;
+}) {
+  return fetcher<Project>({
+    getJwtToken,
+    path: `project/${projectId}`,
+    requestConfig: {
+      method: "PUT",
+    },
+  });
+}
+
 export function getProject({
   projectId,
   getJwtToken,

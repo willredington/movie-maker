@@ -72,6 +72,7 @@ export class MovieMakerCdkStack extends cdk.Stack {
 
     const getResultLambda = await lambdas.buildGetResultLambda(this, {
       projectConfig,
+      videoBucket: buckets.videoBucket,
       resultTable: tables.projectResultTable,
     });
 
@@ -105,6 +106,7 @@ export class MovieMakerCdkStack extends cdk.Stack {
       {
         projectConfig,
         projectTable: tables.projectTable,
+        projectSectionTable: tables.projectSectionTable,
         finalizeProjectStateMachine: stateMachine.finalizeProjectStateMachine,
       }
     );

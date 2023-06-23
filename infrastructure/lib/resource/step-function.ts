@@ -62,6 +62,48 @@ export class StepFunctionConstruct extends Construct {
       }
     );
 
+    const pendingApprovalTask = new tasks.LambdaInvoke(
+      scope,
+      "PendingApprovalInvoke",
+      {
+        lambdaFunction: props.updateProjectLambda,
+        payload: sfn.TaskInput.fromObject({
+          projectId: sfn.JsonPath.stringAt("$.id"),
+          userId: sfn.JsonPath.stringAt("$.userId"),
+          projectStatus: ProjectStatus.NeedsApproval,
+        }),
+      }
+    );
+
+    const definition = getTranscriptTask
+      .next(pendingApprovalTask)
+      .toSingleState("StartProjectDef")
+      .addCatch(failProjectTask, {
+        resultPath: "$.errors",
+      });
+
+    return new sfn.StateMachine(scope, "StartProjectStateMachine", {
+      definition,
+    });
+  }
+
+  private buildFinalizeProjectStateMachine(
+    scope: Construct,
+    props: StepFunctionConstructProps
+  ) {
+    const failProjectTask = new tasks.LambdaInvoke(
+      scope,
+      "FinalizeProjectFailProjectInvoke",
+      {
+        lambdaFunction: props.updateProjectLambda,
+        payload: sfn.TaskInput.fromObject({
+          projectId: sfn.JsonPath.stringAt("$.id"),
+          userId: sfn.JsonPath.stringAt("$.userId"),
+          projectStatus: ProjectStatus.Failed,
+        }),
+      }
+    );
+
     const sectionTasks = new sfn.Map(scope, "SectionMap", {
       itemsPath: "$.sections",
       resultPath: "$.sectionResults",
@@ -89,49 +131,6 @@ export class StepFunctionConstruct extends Construct {
             }),
           })
         )
-    );
-
-    const pendingApprovalTask = new tasks.LambdaInvoke(
-      scope,
-      "PendingApprovalInvoke",
-      {
-        lambdaFunction: props.updateProjectLambda,
-        payload: sfn.TaskInput.fromObject({
-          projectId: sfn.JsonPath.stringAt("$.id"),
-          userId: sfn.JsonPath.stringAt("$.userId"),
-          projectStatus: ProjectStatus.NeedsApproval,
-        }),
-      }
-    );
-
-    const definition = getTranscriptTask
-      .next(sectionTasks)
-      .next(pendingApprovalTask)
-      .toSingleState("StartProjectDef")
-      .addCatch(failProjectTask, {
-        resultPath: "$.errors",
-      });
-
-    return new sfn.StateMachine(scope, "StartProjectStateMachine", {
-      definition,
-    });
-  }
-
-  private buildFinalizeProjectStateMachine(
-    scope: Construct,
-    props: StepFunctionConstructProps
-  ) {
-    const failProjectTask = new tasks.LambdaInvoke(
-      scope,
-      "FinalizeProjectFailProjectInvoke",
-      {
-        lambdaFunction: props.updateProjectLambda,
-        payload: sfn.TaskInput.fromObject({
-          projectId: sfn.JsonPath.stringAt("$.id"),
-          userId: sfn.JsonPath.stringAt("$.userId"),
-          projectStatus: ProjectStatus.Failed,
-        }),
-      }
     );
 
     const finalizingProjectTask = new tasks.LambdaInvoke(
@@ -204,6 +203,7 @@ export class StepFunctionConstruct extends Construct {
     });
 
     const definition = finalizingProjectTask
+      .next(sectionTasks)
       .next(movieMakerTask)
       .next(createResultTask)
       .next(completeProjectTask)

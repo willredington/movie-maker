@@ -338,10 +338,12 @@ export async function buildFinalizeProjectEventLambda(
   {
     projectConfig,
     projectTable,
+    projectSectionTable,
     finalizeProjectStateMachine,
   }: {
     projectConfig: ProjectConfig;
     projectTable: dynamo.ITable;
+    projectSectionTable: dynamo.ITable;
     finalizeProjectStateMachine: sfn.IStateMachine;
   }
 ) {
@@ -351,6 +353,7 @@ export async function buildFinalizeProjectEventLambda(
     overrideProps: {
       environment: {
         [RunTimeEnvVariable.PROJECT_TABLE_NAME]: projectTable.tableName,
+        [RunTimeEnvVariable.SECTION_TABLE_NAME]: projectSectionTable.tableName,
         [RunTimeEnvVariable.FINALIZE_PROJECT_STATE_MACHINE_ARN]:
           finalizeProjectStateMachine.stateMachineArn,
       },
@@ -358,6 +361,7 @@ export async function buildFinalizeProjectEventLambda(
   });
 
   projectTable.grantReadWriteData(lambda);
+  projectSectionTable.grantReadWriteData(lambda);
   finalizeProjectStateMachine.grantStartExecution(lambda);
 
   return lambda;
@@ -393,9 +397,11 @@ export async function buildGetResultLambda(
   {
     projectConfig,
     resultTable,
+    videoBucket,
   }: {
     projectConfig: ProjectConfig;
     resultTable: dynamo.ITable;
+    videoBucket: s3.IBucket;
   }
 ) {
   const lambda = await buildNodeJsLambda(scope, {
@@ -404,11 +410,13 @@ export async function buildGetResultLambda(
     overrideProps: {
       environment: {
         [RunTimeEnvVariable.RESULT_TABLE_NAME]: resultTable.tableName,
+        [RunTimeEnvVariable.VIDEO_BUCKET_NAME]: videoBucket.bucketName,
       },
     },
   });
 
   resultTable.grantReadWriteData(lambda);
+  videoBucket.grantReadWrite(lambda);
 
   return lambda;
 }

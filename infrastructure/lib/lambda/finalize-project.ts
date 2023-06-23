@@ -3,9 +3,10 @@ import { StepFunctions } from "aws-sdk";
 import { RunTimeEnvVariable, getEnvVariable } from "../config";
 import { z } from "zod";
 import { ProjectService } from "../service/project";
-import { ProjectStatus } from "../model";
+import { ProjectSection, ProjectStatus } from "../model";
 import { DEFAULT_JSON_HTTP_HEADERS, DEFAULT_TEXT_HTTP_HEADERS } from "../utils";
 import { getAuthFromEvent } from "../service/auth";
+import { SectionService } from "../service/section";
 
 const stepFunctions = new StepFunctions();
 
@@ -14,7 +15,9 @@ const ExpectedParameters = z.object({
 });
 
 type FinalizeProjectStateMachineInput = {
+  userId: string;
   projectId: string;
+  sections: ProjectSection[];
 };
 
 export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
@@ -38,6 +41,10 @@ export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
     getEnvVariable(RunTimeEnvVariable.PROJECT_TABLE_NAME)
   );
 
+  const sectionService = new SectionService(
+    getEnvVariable(RunTimeEnvVariable.SECTION_TABLE_NAME)
+  );
+
   try {
     const project = (
       await projectService.getProject({
@@ -56,9 +63,15 @@ export const handler: APIGatewayProxyHandler = async (proxyEvent) => {
       };
     }
 
+    const sectionResult = await sectionService.getSectionsForProject({
+      projectId: parametersResult.data.projectId,
+    });
+
     await stepFunctions
       .startExecution({
         input: JSON.stringify({
+          userId,
+          sections: sectionResult.unwrap(),
           projectId: parametersResult.data.projectId,
         } satisfies FinalizeProjectStateMachineInput),
         stateMachineArn: getEnvVariable(

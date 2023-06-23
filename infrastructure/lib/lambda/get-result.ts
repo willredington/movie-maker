@@ -1,23 +1,33 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from "aws-lambda";
 import { z } from "zod";
+import * as AWS from "aws-sdk";
 import { RunTimeEnvVariable, getEnvVariable } from "../config";
 import { ProjectResultService } from "../service/result";
 import { DEFAULT_JSON_HTTP_HEADERS, DEFAULT_TEXT_HTTP_HEADERS } from "../utils";
+import { ProjectResult } from "../model";
+import { createPresignedUrl } from "../service/s3";
 
-const Event = z.object({
+const ExpectedParameters = z.object({
   projectId: z.string(),
 });
+
+type Result = {
+  projectResult: ProjectResult;
+  presignedUrl: string;
+};
 
 export const handler: APIGatewayProxyHandler = async (
   incomingEvent: APIGatewayProxyEvent
 ) => {
-  const eventResult = Event.safeParse(incomingEvent.pathParameters);
+  const parametersResult = ExpectedParameters.safeParse(
+    incomingEvent.pathParameters
+  );
 
-  if (!eventResult.success) {
+  if (!parametersResult.success) {
     return {
       statusCode: 400,
       headers: DEFAULT_TEXT_HTTP_HEADERS,
-      body: "Invalid request body",
+      body: "Invalid request parameters",
     };
   }
 
@@ -25,18 +35,29 @@ export const handler: APIGatewayProxyHandler = async (
     getEnvVariable(RunTimeEnvVariable.RESULT_TABLE_NAME)
   );
 
-  const event = eventResult.data;
+  const parameters = parametersResult.data;
 
   try {
-    const projectResult = await resultService.getProjectResult({
-      projectId: event.projectId,
+    const projectResultWrapped = await resultService.getProjectResult({
+      projectId: parameters.projectId,
     });
 
-    if (projectResult.isOk()) {
+    if (projectResultWrapped.isOk()) {
+      const projectResult = projectResultWrapped.unwrap();
+
+      const presignedUrl = await createPresignedUrl({
+        projectId: parameters.projectId,
+      });
+
+      const result: Result = {
+        projectResult,
+        presignedUrl,
+      };
+
       return {
         statusCode: 200,
         headers: DEFAULT_JSON_HTTP_HEADERS,
-        body: JSON.stringify(projectResult.unwrap()),
+        body: JSON.stringify(result),
       };
     }
 
