@@ -1,4 +1,13 @@
-import { Button, HStack, Heading, Link, useColorMode } from "@chakra-ui/react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import {
+  Button,
+  HStack,
+  Heading,
+  IconButton,
+  Link,
+  useColorMode,
+} from "@chakra-ui/react";
 import { Link as RLink } from "react-router-dom";
 
 type NavItem = {
@@ -14,7 +23,8 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export function Navbar() {
-  const { toggleColorMode } = useColorMode();
+  const { colorMode, toggleColorMode } = useColorMode();
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
   return (
     <HStack
@@ -39,8 +49,17 @@ export function Navbar() {
         </HStack>
       </HStack>
       <HStack spacing={4}>
-        <Button onClick={toggleColorMode}>Theme</Button>
-        <Button>Sign In</Button>
+        <IconButton
+          onClick={toggleColorMode}
+          aria-label="toggle-color-mode-btn"
+          icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+        />
+
+        {isAuthenticated ? (
+          <Button onClick={() => logout()}>Logout</Button>
+        ) : (
+          <Button onClick={() => loginWithRedirect()}>Login</Button>
+        )}
       </HStack>
     </HStack>
   );

@@ -19,7 +19,7 @@ export function ProjectList() {
 
   const { onOpen, isOpen, onClose } = useDisclosure();
 
-  const { data: projects = [] } = useQuery(
+  const { refetch, data: projects = [] } = useQuery(
     "getProjects",
     () =>
       getProjects({
@@ -51,7 +51,11 @@ export function ProjectList() {
               aria-label="add project"
             />
           </HStack>
-          <IconButton icon={<RepeatIcon />} aria-label="refresh-btn" />
+          <IconButton
+            icon={<RepeatIcon />}
+            aria-label="refresh-btn"
+            onClick={() => void refetch()}
+          />
         </HStack>
         <SimpleGrid w="full" columns={3} spacing={4}>
           {projects.length === 0 && (
