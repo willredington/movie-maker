@@ -5,12 +5,12 @@ import {
   CardFooter,
   CardHeader,
   Heading,
-  Tag,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { StatusTag } from "../../components/StatusTag";
 import { Project, ProjectStatus } from "../../models/project";
 
 export function ProjectListItem({ project }: Record<"project", Project>) {
@@ -30,7 +30,7 @@ export function ProjectListItem({ project }: Record<"project", Project>) {
       <CardHeader>
         <VStack spacing={3} align={"flex-start"}>
           <Heading size={"md"}>{project.title}</Heading>
-          {needsApproval && <Tag colorScheme="yellow">Needs Approval</Tag>}
+          <StatusTag status={project.status} />
         </VStack>
       </CardHeader>
       <CardBody>
